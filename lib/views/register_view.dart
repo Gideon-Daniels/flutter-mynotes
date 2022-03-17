@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/main.dart';
 
 import '../firebase_options.dart';
 
@@ -64,6 +65,10 @@ class _RegisterViewState extends State<RegisterView> {
                     .createUserWithEmailAndPassword(
                         email: email, password: password);
                 print(userCredential);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/notes/',
+                  (_) => false,
+                );
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'weak-password') {
                   print('weak password');
@@ -78,9 +83,8 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           TextButton(
             onPressed: () {
-               Navigator.of(context)
-                .pushNamedAndRemoveUntil('/login', (route) => false);
-         
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/login/', (route) => false);
             },
             child: const Text('Already Registered? Login here!'),
           )
