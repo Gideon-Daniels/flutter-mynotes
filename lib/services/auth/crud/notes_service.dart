@@ -105,7 +105,7 @@ class NotesService {
     await _ensureDbIsOpen();
 
     final db = _getDatabaseOrThrow();
-    final numberOfDeletions = await db.delete(noteTable);
+    // final numberOfDeletions = await db.delete(noteTable);
     _notes = [];
     _notesStreamController.add(_notes);
     return await db.delete(noteTable);
@@ -140,8 +140,11 @@ class NotesService {
 
     const text = '';
     // create the note
-    final noteId = await db.insert(noteTable,
-        {userIdColumn: owner.id, textColumn: text, isSyncedWithCoudColumn: 1});
+    final noteId = await db.insert(noteTable, {
+      userIdColumn: owner.id,
+      textColumn: text,
+      isSyncedWithCoudColumn: 1,
+    });
 
     final note = DatabaseNote(
       id: noteId,
@@ -234,12 +237,14 @@ class NotesService {
   Future<void> _ensureDbIsOpen() async {
     try {
       await open();
-    } on DatabseAlreadyOpenException {}
+    } on DatabaseAlreadyOpenException {
+      throw DatabaseAlreadyOpenException();
+    }
   }
 
   Future<void> open() async {
     if (_db != null) {
-      throw DatabseAlreadyOpenException();
+      throw DatabaseAlreadyOpenException();
     }
     try {
       final docsPath = await getApplicationDocumentsDirectory();
@@ -334,5 +339,5 @@ const createNoteTable = '''CREATE TABLE "note" (
           "is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
           FOREIGN KEY("user_id") REFERENCES "user"("id"),
           PRIMARY KEY("id" AUTOINCREMENT)
-)
+);
 ''';
