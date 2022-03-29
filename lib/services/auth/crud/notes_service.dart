@@ -74,7 +74,7 @@ class NotesService {
     // update DB
     final updatesCount = await db.update(noteTable, {
       textColumn: text,
-      isSyncedWithCoudColumn: 0,
+      isSyncedWithCloudColumn: 0,
     });
 
     if (updatesCount == 0) {
@@ -163,7 +163,7 @@ class NotesService {
     final noteId = await db.insert(noteTable, {
       userIdColumn: owner.id,
       textColumn: text,
-      isSyncedWithCoudColumn: 1,
+      isSyncedWithCloudColumn: 1,
     });
 
     final note = DatabaseNote(
@@ -324,7 +324,7 @@ class DatabaseNote {
         userId = map[userIdColumn] as int,
         text = map[textColumn] as String,
         isSynchedWithCloud =
-            (map[isSyncedWithCoudColumn] as int) == 1 ? true : false;
+            (map[isSyncedWithCloudColumn] as int) == 1 ? true : false;
 
   @override
   String toString() =>
@@ -346,7 +346,7 @@ const idColumn = 'id';
 const emailColumn = 'email';
 const userIdColumn = 'user_id';
 const textColumn = 'text';
-const isSyncedWithCoudColumn = 'is_synced_with_cloud';
+const isSyncedWithCloudColumn = 'is_synced_with_cloud';
 const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
           "id"	INTEGER NOT NULL,
           "email"	TEXT UNIQUE,
