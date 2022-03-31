@@ -57,6 +57,11 @@ class _RegisterViewState extends State<RegisterView> {
             ),
           ),
           TextButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              onPrimary: Colors.black,
+              minimumSize: const Size(double.infinity, 50),
+            ),
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
