@@ -59,11 +59,16 @@ class _LoginViewState extends State<LoginView> {
             ),
           ),
           TextButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.blue[400],
+              onPrimary: Colors.white,
+              minimumSize: const Size(40, 40),
+            ),
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
               try {
-              await AuthService.firebase().logIn(
+                await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );

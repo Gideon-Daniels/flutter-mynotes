@@ -58,9 +58,9 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           TextButton(
             style: ElevatedButton.styleFrom(
-              primary: Colors.white,
-              onPrimary: Colors.black,
-              minimumSize: const Size(double.infinity, 50),
+              primary: Colors.blue[400],
+              onPrimary: Colors.white,
+              minimumSize: const Size(40, 40),
             ),
             onPressed: () async {
               final email = _email.text;
