@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mynotes/api/google_signin_api.dart';
 
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/services/auth/auth_exceptions.dart';
@@ -107,6 +109,19 @@ class _LoginViewState extends State<LoginView> {
             },
             child: const Text('Login'),
           ),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.blue[400],
+              onPrimary: Colors.white,
+              minimumSize: const Size(40, 40),
+            ),
+            onPressed: signIn,
+            icon: const FaIcon(
+              FontAwesomeIcons.google,
+              color: Colors.red,
+            ),
+            label: const Text('Sign in with Google'),
+          ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pushNamedAndRemoveUntil(
@@ -119,5 +134,19 @@ class _LoginViewState extends State<LoginView> {
         ],
       ),
     );
+  }
+
+  Future signIn() async {
+    final user = await GoogleSignInApi.login();
+
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Sign In Failed'),
+        ),
+      );
+    } else {
+      print(user);
+    }
   }
 }
