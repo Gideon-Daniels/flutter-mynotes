@@ -3,9 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mynotes/api/google_signin_api.dart';
 
 import 'package:mynotes/constants/routes.dart';
+import 'package:mynotes/provider/google_sign_in.dart';
 import 'package:mynotes/services/auth/auth_exceptions.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/utilities/dialogs/error_dialog.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -115,7 +117,11 @@ class _LoginViewState extends State<LoginView> {
               onPrimary: Colors.white,
               minimumSize: const Size(40, 40),
             ),
-            onPressed: signIn,
+            onPressed: () {
+              final provider =
+                  Provider.of<GoogleSignInProvider>(context, listen: false);
+              provider.googleLogin();
+            },
             icon: const FaIcon(
               FontAwesomeIcons.google,
               color: Colors.red,
@@ -136,17 +142,19 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Future signIn() async {
-    final user = await GoogleSignInApi.login();
+  // signin without firebase
 
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Sign In Failed'),
-        ),
-      );
-    } else {
-      print(user);
-    }
-  }
+  // Future signIn() async {
+  //   final user = await GoogleSignInApi.login();
+
+  //   if (user == null) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Sign In Failed'),
+  //       ),
+  //     );
+  //   } else {
+  //     print(user);
+  //   }
+  // }
 }
