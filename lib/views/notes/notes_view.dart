@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../constants/routes.dart';
 import '../../enums/menu_action.dart';
+import '../../provider/google_sign_in.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
@@ -58,6 +59,9 @@ class _NotesViewState extends State<NotesView> {
                   if (shouldLogout) {
                     await AuthService.firebase().logOut();
                     await FirebaseAuth.instance.signOut();
+                    final provider = Provider.of<GoogleSignInProvider>(context,
+                        listen: false);
+                    await provider.logout();
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       loginRoute,
                       (_) => false,
