@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/services/cloud/cloud_note.dart';
 import 'package:mynotes/services/cloud/firebase_cloud_storage.dart';
 import 'package:mynotes/utilities/dialogs/logout_dialog.dart';
 import 'package:mynotes/views/notes/notes_list_view.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/routes.dart';
 import '../../enums/menu_action.dart';
@@ -28,9 +30,19 @@ class _NotesViewState extends State<NotesView> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(' Your Notes'),
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: CircleAvatar(
+            radius: 40,
+            backgroundImage: NetworkImage(user.photoURL.toString()),
+          ),
+        ),
+        title: Text(user.displayName.toString() + " Note's"),
         actions: [
           IconButton(
             onPressed: () {
@@ -45,6 +57,7 @@ class _NotesViewState extends State<NotesView> {
                   final shouldLogout = await showLogOutDialog(context);
                   if (shouldLogout) {
                     await AuthService.firebase().logOut();
+                    await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       loginRoute,
                       (_) => false,

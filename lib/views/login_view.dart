@@ -1,6 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mynotes/api/google_signin_api.dart';
 
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/provider/google_sign_in.dart';
@@ -117,10 +117,20 @@ class _LoginViewState extends State<LoginView> {
               onPrimary: Colors.white,
               minimumSize: const Size(40, 40),
             ),
-            onPressed: () {
+            onPressed: () async {
               final provider =
                   Provider.of<GoogleSignInProvider>(context, listen: false);
-              provider.googleLogin();
+              await provider.googleLogin();
+              final user = AuthService.firebase().currentUser;
+              final userInfo = FirebaseAuth.instance.currentUser;
+              print(userInfo);
+              if (user?.isEmailVerified ?? false) {
+                // users email is verified
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  notesRoute,
+                  (route) => false,
+                );
+              }
             },
             icon: const FaIcon(
               FontAwesomeIcons.google,
@@ -136,7 +146,7 @@ class _LoginViewState extends State<LoginView> {
               );
             },
             child: const Text('Not Registered yet? Register her!'),
-          )
+          ),
         ],
       ),
     );

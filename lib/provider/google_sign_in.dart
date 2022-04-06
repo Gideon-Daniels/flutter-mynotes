@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,21 +13,29 @@ class GoogleSignInProvider extends ChangeNotifier {
   GoogleSignInAccount get user => _user!;
 
   Future googleLogin() async {
-    final googleUser = await googleSignIn.signIn();
+    try {
+      final googleUser = await googleSignIn.signIn();
 
-    if (googleUser == null) return;
-    _user = googleUser;
+      if (googleUser == null) return;
+      _user = googleUser;
 
-    print(_user);
+      print(_user);
 
-    final googleAuth = await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
+      Future logout() async {
+        await googleSignIn.disconnect();
+      }
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      print(e.toString());
+    }
 
     notifyListeners();
   }
