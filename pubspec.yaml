@@ -50,10 +50,11 @@ dependencies:
   path_provider: ^2.0.9
   path: ^1.8.0
   share_plus: ^4.0.3
+  flutter_bloc: ^8.0.1
+  provider: ^6.0.2
+  bloc: ^8.0.3
 
   # State Management
-  provider: ^5.0.0
-  bloc: ^8.0.3
 
 dev_dependencies:
   flutter_test:

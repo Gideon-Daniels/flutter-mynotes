@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/provider/google_sign_in.dart';
 import 'package:mynotes/services/auth/auth_exceptions.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
+import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
+import 'package:mynotes/services/auth/bloc/auth_event.dart';
 import 'package:mynotes/utilities/dialogs/error_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -72,26 +74,12 @@ class _LoginViewState extends State<LoginView> {
               final email = _email.text;
               final password = _password.text;
               try {
-                await AuthService.firebase().logIn(
-                  email: email,
-                  password: password,
-                );
-
-                final user = AuthService.firebase().currentUser;
-
-                if (user?.isEmailVerified ?? false) {
-                  // users email is verified
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    notesRoute,
-                    (route) => false,
-                  );
-                } else {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    // users email is not verified
-                    verifyEmailRoute,
-                    (route) => false,
-                  );
-                }
+                context.read<AuthBloc>().add(
+                      AuthEventLogIn(
+                        email,
+                        password,
+                      ),
+                    );
               } on UserNotFoundAuthExcpetion {
                 await showErrorDialog(
                   context,
@@ -111,33 +99,33 @@ class _LoginViewState extends State<LoginView> {
             },
             child: const Text('Login'),
           ),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blue[400],
-              onPrimary: Colors.white,
-              minimumSize: const Size(40, 40),
-            ),
-            onPressed: () async {
-              final provider =
-                  Provider.of<GoogleSignInProvider>(context, listen: false);
-              await provider.googleLogin();
-              final user = AuthService.firebase().currentUser;
-              final userInfo = FirebaseAuth.instance.currentUser;
-              print(userInfo);
-              if (user?.isEmailVerified ?? false) {
-                // users email is verified
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  notesRoute,
-                  (route) => false,
-                );
-              }
-            },
-            icon: const FaIcon(
-              FontAwesomeIcons.google,
-              color: Colors.red,
-            ),
-            label: const Text('Sign in with Google'),
-          ),
+          // ElevatedButton.icon(
+          //   style: ElevatedButton.styleFrom(
+          //     primary: Colors.blue[400],
+          //     onPrimary: Colors.white,
+          //     minimumSize: const Size(40, 40),
+          //   ),
+          //   onPressed: () async {
+          //     final provider =
+          //         Provider.of<GoogleSignInProvider>(context, listen: false);
+          //     await provider.googleLogin();
+          //     final user = AuthService.firebase().currentUser;
+          //     final userInfo = FirebaseAuth.instance.currentUser;
+          //     print(userInfo);
+          //     if (user?.isEmailVerified ?? false) {
+          //       // users email is verified
+          //       Navigator.of(context).pushNamedAndRemoveUntil(
+          //         notesRoute,
+          //         (route) => false,
+          //       );
+          //     }
+          //   },
+          //   icon: const FaIcon(
+          //     FontAwesomeIcons.google,
+          //     color: Colors.red,
+          //   ),
+          //   label: const Text('Sign in with Google'),
+          // ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pushNamedAndRemoveUntil(
