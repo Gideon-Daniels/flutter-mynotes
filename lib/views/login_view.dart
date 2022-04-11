@@ -1,15 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotes/constants/routes.dart';
-import 'package:mynotes/provider/google_sign_in.dart';
 import 'package:mynotes/services/auth/auth_exceptions.dart';
-import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
+import 'package:mynotes/services/auth/bloc/auth_state.dart';
 import 'package:mynotes/utilities/dialogs/error_dialog.dart';
-import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -64,40 +60,36 @@ class _LoginViewState extends State<LoginView> {
               hintText: 'Enter your password here',
             ),
           ),
-          TextButton(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blue[400],
-              onPrimary: Colors.white,
-              minimumSize: const Size(40, 40),
-            ),
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-              try {
-                context.read<AuthBloc>().add(
-                      AuthEventLogIn(
-                        email,
-                        password,
-                      ),
-                    );
-              } on UserNotFoundAuthExcpetion {
-                await showErrorDialog(
-                  context,
-                  'User not found',
-                );
-              } on WrongPasswordAuthException {
-                await showErrorDialog(
-                  context,
-                  'Wrong credentials',
-                );
-              } on GenericAuthException {
-                await showErrorDialog(
-                  context,
-                  'Authentication error',
-                );
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) async {
+              if (state is AuthStateLoggedOut) {
+                if (state.exception is UserNotFoundAuthExcpetion){
+                  await showErrorDialog(context, 'User ot found');
+                } else if (state.exception is WrongPasswordAuthException){
+                  await showErrorDialog(context, 'Wrong credentials');
+                } else if (state.exception is GenericAuthException) {
+                  await showErrorDialog(context, 'Authentication error');
+                }
               }
             },
-            child: const Text('Login'),
+            child: TextButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue[400],
+                onPrimary: Colors.white,
+                minimumSize: const Size(40, 40),
+              ),
+              onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+                 context.read<AuthBloc>().add(
+                        AuthEventLogIn(
+                          email,
+                          password,
+                        ),
+                      );
+              },
+              child: const Text('Login'),
+            ),
           ),
           // ElevatedButton.icon(
           //   style: ElevatedButton.styleFrom(
