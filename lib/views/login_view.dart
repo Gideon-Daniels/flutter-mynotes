@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/services/auth/auth_exceptions.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
@@ -40,28 +39,16 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) async{
-         if (state is AuthStateLoggedOut) {
-
-          final closeDialog = _closeDialogHandle;
-
-            if(!state.isLoading && closeDialog != null){
-              closeDialog();
-              _closeDialogHandle = null;
-            } else if (state.isLoading && closeDialog == null) {
-              _closeDialogHandle = showLoadingDialog(
-                context: context,
-                 text: 'Loading...');
-            }
-
-            if (state.exception is UserNotFoundAuthExcpetion) {
-              await showErrorDialog(context, 'User ot found');
-            } else if (state.exception is WrongPasswordAuthException) {
-              await showErrorDialog(context, 'Wrong credentials');
-            } else if (state.exception is GenericAuthException) {
-              await showErrorDialog(context, 'Authentication error');
-            }
+      listener: (context, state) async {
+        if (state is AuthStateLoggedOut) {
+          if (state.exception is UserNotFoundAuthExcpetion) {
+            await showErrorDialog(context, 'User ot found');
+          } else if (state.exception is WrongPasswordAuthException) {
+            await showErrorDialog(context, 'Wrong credentials');
+          } else if (state.exception is GenericAuthException) {
+            await showErrorDialog(context, 'Authentication error');
           }
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -134,9 +121,7 @@ class _LoginViewState extends State<LoginView> {
             // ),
             TextButton(
               onPressed: () {
-               context.read<AuthBloc>().add(
-                 const AuthEventShouldRegister()
-               );
+                context.read<AuthBloc>().add(const AuthEventShouldRegister());
               },
               child: const Text('Not Registered yet? Register her!'),
             ),
