@@ -42,7 +42,7 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) async {
         if (state is AuthStateLoggedOut) {
           if (state.exception is UserNotFoundAuthExcpetion) {
-            await showErrorDialog(context, 'User ot found');
+            await showErrorDialog(context, 'User not found');
           } else if (state.exception is WrongPasswordAuthException) {
             await showErrorDialog(context, 'Wrong credentials');
           } else if (state.exception is GenericAuthException) {
@@ -123,7 +123,7 @@ class _LoginViewState extends State<LoginView> {
               onPressed: () {
                 context.read<AuthBloc>().add(const AuthEventShouldRegister());
               },
-              child: const Text('Not Registered yet? Register her!'),
+              child: const Text('Not Registered yet? Register here!'),
             ),
           ],
         ),
