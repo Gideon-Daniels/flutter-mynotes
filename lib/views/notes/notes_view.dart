@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
 import '../../constants/routes.dart';
 import '../../enums/menu_action.dart';
-import '../../provider/google_sign_in.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
