@@ -4,7 +4,7 @@
         android:label="mynotes"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
-        android:name="androidx.multidex.MultiDexApplication"
+        
         >
 
         <activity

@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
@@ -32,19 +32,12 @@ class _NotesViewState extends State<NotesView> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
+    // final user = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: CircleAvatar(
-            radius: 40,
-            backgroundImage: NetworkImage(user.photoURL.toString()),
-          ),
-        ),
-        title: Text(user.displayName.toString() + " Note's"),
+        title: const Text(" Notes"),
         actions: [
           IconButton(
             onPressed: () {
